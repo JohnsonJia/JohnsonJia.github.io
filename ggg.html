@@ -1,15 +1,46 @@
+
+<!DOCTYPE html>
 <html>
 <head>
-  <title></title>
-  <script src="http://orangeappletw.github.io/JavaScript-Advanced-textbook/database_-_part_1/js/fdb-all.min.js"></script>
+	<title>DB Test</title>
+	<script type="text/javascript" src="http://orangeappletw.github.io/JavaScript-Advanced-textbook/database_-_part_1/js/fdb-all.min.js"></script>
 </head>
 <body>
-<h1>ggg</h1>
+<h1>DB Test</h1>
+<table>
+	<thead>
+		<tr>
+			<td>id</td>
+			<td>姓名</td>
+		</tr>
+	</thead>
+	<tbody class="container">
+		<tr>
+			<td class="inner"></td>
+			<td class="inner"></td>
+		</tr>
+	</tbody>
+</table>
 <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
-<script>
-  var fdb = new ForerunnerDB();
-  var db = fdb.db("你的資料庫名稱");
-  studentCollection = db.collection('students');
+<script type="text/javascript">
+	var fdb = new ForerunnerDB();
+	var db = fdb.db("DB Test");
+	studentCollection = db.collection('students');
+	studentCollection.load();
+	var studlist = studentCollection.find();
 </script>
 </body>
 </html>
+
+<!--
+var stud = ["Joseph","Edison","Annie","Ian","Evan","David","Kevin"]
+for(var j = 0;j<=10;j++){
+	for(var i=0;i<=6;i++){
+		var newStudent = {
+    		name: stud[i],
+    		age: 14
+		}
+		studentCollection.insert(newStudent);
+	}
+}
+-->
