@@ -2,176 +2,171 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://code.jquery.com/jquery.min.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <script src="http://orangeappletw.github.io/JavaScript-Advanced-textbook/lesson_4/js/fdb-all.min.js"></script>
-  <meta charset="utf-8">
-<!--
-Created using JS Bin
-http://jsbin.com
-
-Copyright (c) 2016 by kevin-shu (http://jsbin.com/sukoxat/16/edit)
-
-Released under the MIT license: http://jsbin.mit-license.org
--->
-<meta name="robots" content="noindex">
-  <meta name="viewport" content="width=device-width">
-  <title>JS Bin</title>
+	<title>DB Test</title>
+	<script type="text/javascript" src="js/fdb-all.min.js"></script>
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </head>
 <body>
-  
-  <div class="container" style="padding-top:20px">
-    <div class="well">
-      年齡大於等於：<input id="age-minimum-field" type="text" />
-      <br>
-      <input id="A-class" type="checkbox" checked="true"> 甲班
-      &nbsp;
-      <input id="B-class" type="checkbox" checked="true"> 乙班
-      &nbsp;
-      <input id="C-class" type="checkbox" checked="true"> 丙班
-      <hr>
-      <button id="search-button" class="btn btn-success btn-xs">搜尋</button>
-    </div>
-  
-    <table class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Class</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-  </div>
-  
-  <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog">
+<h1>DB Test</h1>
+<div>
+	<div class="row">
+		<div class="col-md-2">
+			<input type="text" class="form-control" id="searchAgeG" placeholder="年齡大於">
+			<input type="text" class="form-control" id="searchAgeL" placeholder="年齡小於">
+			<button type="submit" class="btn btn-primary" onclick="searchAge()">搜尋</button>
+		</div>
+	</div>
+</div>
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Age</th>
+			<th>姓名</th>
+			<th>更動</th>
+		</tr>
+	</thead>
+	<tbody class="container">
+	</tbody>
+</table>
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改學生資料</h4>
       </div>
       <div class="modal-body">
-        <label>姓名</label>
-        <input type="text" id="studentNameInput"/>
-        <br>
-        <label>年齡</label>
-        <input type="text" id="studentAgeInput"/>
-        <br>
-        <label>電話</label>
-        <input type="text" id="studentPhoneInput"/>
-        <br>
-        <label>班級</label>
-        <input type="text" id="studentClassInput"/>
+        <form>
+          <div class="form-group">
+            <label for="InputRow">#</label>
+            <input type="text" class="form-control" id="InputRow" value="">
+          </div>
+          <div class="form-group">
+            <label for="InputAge">Age</label>
+            <input type="text" class="form-control" id="InputAge" value="">
+          </div>
+          <div class="form-group">
+            <label for="InputName">姓名</label>
+            <input type="text" class="form-control" id="InputName" value="">
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="save-changes-button">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+        <button type="button" class="btn btn-primary" onclick="edit()" data-dismiss="modal">儲存</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">確定要刪除嗎?</h4>
+      </div>
+      <div class="modal-body">
+        <p>你確定要刪除ID為</p>
+        <div id="DeleteModalID">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="resetdel()" >關閉</button>
+        <button type="button" class="btn btn-danger" id="delbuttoncheck" data-dismiss="modal" onclick="resetdel()" >確定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">搜尋到的資料</h4>
+      </div>
+      <div class="modal-body">
+        <div id="searchResult">
 
-<script>
-var fdb = new ForerunnerDB();
-var db = fdb.db("DB");
-var students = db.collection("students");
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" >關閉</button>
+        <button type="button" class="btn btn-danger" id="delbuttoncheck" data-dismiss="modal" >確定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	var fdb = new ForerunnerDB();
+	var db = fdb.db("DB Test");
+	studentCollection = db.collection('students');
+	studentCollection.load(function(){
+		var studlist = studentCollection.find();
+		for (var i = 0; i <= 6; i++) {
+			var nowID = studentCollection._data[i]._id
+			row = i + 1
+			$(".container").append("<tr id='row"+row+"'><th scope='row'>"+nowID+"</th>"+"<td id='row"+row+"-age' class='inner'>"+studlist[i].age+"</td>"+"<td id='row"+row+"-name' class='inner'>"+studlist[i].name+"</td><td><button type='button' class='btn btn-warning' id='editbutton' data-toggle='modal' data-target='#EditModal' data-id='"+nowID+"'>修改</button><button type='button' class='btn btn-danger' data-toggle='modal' id='delbutton' data-target='#DeleteModal'data-id='"+nowID+"' onclick='delbuttonclick("+row+")' >刪除</button></td></tr>")
+		}
+	});
+	var edit = function(){
+		var editRow = $("#InputRow").val();
+		var editAge = $("#InputAge").val();
+		var editName = $("#InputName").val();
+		$("#row"+editRow+"-age").empty();
+		$("#row"+editRow+"-age").append(editAge);
+		$("#row"+editRow+"-name").empty();
+		$("#row"+editRow+"-name").append(editName);
+		var newData = {
+    		name: editName,
+    		age: editAge
+		};
+		db.collection("students").updateById(studentCollection._data[editRow - 1]._id,newData);
+		studentCollection.save();
+	}
+	var delbuttonclick = function (row) {
+		var DeleteModalID = $("#row"+row+" td button").attr("data-id");
+		$("#DeleteModalID").append("<code>"+DeleteModalID+"</code>")
+		$("#delbuttoncheck").click(function(){
+			studentCollection.remove(
+			{
+				_id: DeleteModalID
+			})
+			studentCollection.save();
+			$("#row"+row).empty();
+		})
+	}
+	var resetdel = function(){
+		$("#DeleteModalID").empty();
+	}
+	var searchAge = function(){
+		var searchAgeG = $("#searchAgeG").val();
+		var searchAgeL = $("#searchAgeL").val();
+		var searchQuery = {
+			age: {
+				"$gt": searchAgeG,
+				"$lt": searchAgeL
+			}
+		}
+		var searchResult = studentCollection.find(searchQuery);
 
-var studentId = "";
-
-students.load(function(){
-//   students.insert({name:"Kevin",age:Math.floor(Math.random()*30)});
-  students.save();  
-  showDataInTable(students.find());
-  
-  
-  $("body").on("click", ".js-edit-btn", function(){
-    var studentData = students.find( {_id:$(this).data("id")} );
-    studentData = studentData[0];
-    studentId = $(this).data("id");
-    $("#studentNameInput").val(studentData.name);
-    $("#studentAgeInput").val(studentData.age);
-    $("#studentPhoneInput").val(studentData.phone);
-    $("#studentClassInput").val(studentData.class);
-    $("#edit-modal").modal("show");
-  });
-  
-  $("body").on("click", ".js-delete-btn", function(){
-//     alert("我的ID是"+$(this).data("id")+", 珍重再見~ QQ");
-    students.remove({
-      _id: $(this).data("id")
-    });
-    students.save();
-    showDataInTable(students.find());
-  });
-  
-});
-
-
-$("#save-changes-button").click(function(){
-  var newData = {
-    name: $("#studentNameInput").val(),
-    age: $("#studentAgeInput").val(),
-    phone: $("#studentPhoneInput").val(),
-    class: $("#studentClassInput").val()
-  };
-  students.updateById(studentId, newData);
-  students.save();
-  showDataInTable(students.find());
-  $("#edit-modal").modal("hide");
-});
-
-$("#search-button").on("click",function(){
-  var ageMinimum = $("#age-minimum-field").val();
-  var classCondition = [];
-  if($("#A-class").prop("checked")){ classCondition.push("甲班"); }
-  if($("#B-class").prop("checked")){ classCondition.push("乙班"); }
-  if($("#C-class").prop("checked")){ classCondition.push("丙班"); }
-  var data = students.find({
-    age:{$gte:ageMinimum},
-    class:{
-      $in: classCondition
-    }
-  });
-  showDataInTable(data);
-});
-
-function showDataInTable(data){
-  $("tbody").html("");
-  for(var i=0; i<data.length; i++){
-    $('tbody').append(
-      "<tr>"+
-        "<td>"+data[i]._id+"</td>"+
-        "<td>"+data[i].name+"</td>"+
-        "<td>"+data[i].age+"</td>"+
-        "<td>"+data[i].class+"</td>"+
-        "<td><button class='js-edit-btn' data-id='"+data[i]._id+"'>修改</button>"+
-        "<button class='js-delete-btn' data-id='"+data[i]._id+"'>刪除</button></td>"+
-      "</tr>"
-    );
-  }
-}
+		console.log(searchResult)
+	}
 </script>
-<script src="http://static.jsbin.com/js/render/edit.js?3.35.12"></script>
-<script>jsbinShowEdit && jsbinShowEdit({"static":"http://static.jsbin.com","root":"http://jsbin.com"});</script>
-<script src="http://static.jsbin.com/js/vendor/eventsource.js?3.35.12"></script>
-<script src="http://static.jsbin.com/js/spike.js?3.35.12"></script>
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-1656750-34', 'jsbin.com');
-ga('require', 'linkid', 'linkid.js');
-ga('require', 'displayfeatures');
-ga('send', 'pageview');
-
-</script>
-
 </body>
 </html>
+<!--
+var stud = ["Joseph","Edison","Annie","Ian","Evan","David","Kevin"]
+for(var j = 0;j<=10;j++){
+	for(var i=0;i<=6;i++){
+		var newStudent = {
+    		name: stud[i],
+    		age: 14
+		}
+		studentCollection.insert(newStudent);
+	}
+}
+-->
